@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:netflix/view/bottomnavigartion/bottomScreen.dart';
 import 'package:netflix/view/downloadsPage/downloads.dart';
 import 'package:netflix/view/homepage/homescreen.dart';
-import 'package:netflix/view/sample.dart';
+
+import 'package:netflix/view/serchScreen/search.dart';
 import 'package:netflix/view/splahScreen/splashscreen.dart';
+import 'package:netflix/view/tvShowPage/tvscreen.dart';
 import 'package:netflix/view/viewScreen/viewpage.dart';
 
 import 'package:netflix/view/whoPage/watching.dart';
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        home: BottomScreen(),
+        home: SplashScreen(),
       ),
     );
   }

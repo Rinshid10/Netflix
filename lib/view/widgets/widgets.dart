@@ -7,6 +7,12 @@ Widget textSample(
     required Color color}) {
   return Text(
     textdetails,
-    style: TextStyle(fontSize: size, fontWeight: fontw, color: color),
+    overflow: TextOverflow.ellipsis,
+    maxLines: 2,
+    style: TextStyle(
+      fontSize: size,
+      fontWeight: fontw,
+      color: color,
+    ),
   );
 }

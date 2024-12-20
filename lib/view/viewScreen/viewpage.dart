@@ -1,15 +1,37 @@
+// import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:netflix/utils/utils.dart';
 import 'package:netflix/view/viewScreen/widgets.dart';
 import 'package:netflix/view/widgets/widgets.dart';
+import 'package:netflix/viewModel/netfilixprovider.dart';
+import 'package:provider/provider.dart';
 
 class ViewPage extends StatelessWidget {
-  const ViewPage({super.key});
+  String? titleName;
+  String? originalLan;
+  String? images;
+  String? about;
+  String? releaseDate;
+  String? movieOrseries;
+
+  ViewPage({
+    super.key,
+    required this.about,
+    required this.movieOrseries,
+    required this.images,
+    required this.originalLan,
+    required this.releaseDate,
+    required this.titleName,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final value = movieOrseries?.split('') ?? [];
+    String formattedTitle = value.join(' ').toUpperCase();
+
     return Scaffold(
       backgroundColor: Utils.main,
       body: SafeArea(
@@ -19,15 +41,47 @@ class ViewPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 300,
-                    width: double.infinity,
-                    child: Image(
-                      image: AssetImage('asset/container_kids.jpeg'),
-                      fit: BoxFit.fill,
-                    ),
+                  Stack(
+                    children: [
+                      SizedBox(
+                        height: 300,
+                        width: double.infinity,
+                        child: CachedNetworkImage(
+                          imageUrl: images != null
+                              ? 'https://image.tmdb.org/t/p/w400/$images'
+                              : 'https://via.placeholder.com/400', // Default image
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Center(child: Text('No image found')),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        child: Center(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red, width: 2),
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.play_arrow_outlined,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Column(
@@ -35,7 +89,7 @@ class ViewPage extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Container(
+                            const SizedBox(
                               height: 30,
                               width: 40,
                               child: Image(
@@ -44,82 +98,83 @@ class ViewPage extends StatelessWidget {
                               ),
                             ),
                             textSample(
-                              textdetails: 'S E R I E S',
-                              size: 10,
+                              textdetails: formattedTitle,
+                              size: 13,
                               fontw: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ],
                         ),
-                        Gap(10),
+                        const Gap(10),
                         textSample(
-                          textdetails: 'Stranger Things',
+                          textdetails: titleName ?? 'No title',
                           size: 25,
                           fontw: FontWeight.bold,
                           color: Colors.white,
                         ),
-                        Gap(10),
+                        const Gap(10),
                         Container(
                           width: double.infinity,
                           height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.play_arrow),
-                              Gap(4),
+                              const Icon(Icons.play_arrow),
+                              const Gap(4),
                               textSample(
                                 textdetails: 'Play',
-                                size: 20,
+                                size: 18,
                                 fontw: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ],
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
                         ),
-                        Gap(10),
+                        const Gap(10),
                         Container(
                           width: double.infinity,
                           height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.download,
                                 color: Colors.white,
                               ),
-                              Gap(4),
+                              const Gap(4),
                               textSample(
                                 textdetails: 'Download',
-                                size: 20,
+                                size: 18,
                                 fontw: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ],
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
                         ),
+                        const Gap(10),
                         Text(
-                          'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
-                          style: TextStyle(color: Colors.white),
+                          about ?? 'No about available',
+                          style: const TextStyle(color: Colors.white),
                         ),
                         Row(
                           children: [
                             textSample(
-                              textdetails: 'Relese date:',
+                              textdetails: 'Release date:',
                               size: 15,
                               fontw: FontWeight.normal,
                               color: Colors.white.withOpacity(0.3),
                             ),
-                            Gap(10),
+                            const Gap(10),
                             textSample(
-                              textdetails: '10/2/3005',
+                              textdetails: releaseDate ?? 'No date found',
                               size: 15,
                               fontw: FontWeight.normal,
                               color: Colors.white.withOpacity(0.3),
@@ -129,89 +184,102 @@ class ViewPage extends StatelessWidget {
                         Row(
                           children: [
                             textSample(
-                              textdetails: 'media_type',
+                              textdetails: "Original Language",
                               size: 15,
                               fontw: FontWeight.normal,
                               color: Colors.white.withOpacity(0.3),
                             ),
-                            Gap(10),
+                            const Gap(10),
                             textSample(
-                              textdetails: 'Movie',
+                              textdetails: originalLan ?? 'No data',
                               size: 15,
                               fontw: FontWeight.normal,
                               color: Colors.white.withOpacity(0.3),
                             ),
                           ],
                         ),
-                        Gap(10),
+                        const Gap(10),
                         newoneRowContainer(),
-                        Gap(10),
+                        const Gap(10),
                         textSample(
-                          textdetails: 'Episods',
+                          textdetails: 'Movies List',
                           size: 20,
                           fontw: FontWeight.bold,
                           color: Colors.white,
                         ),
-                        Gap(15),
+                        const Gap(15),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return bigContainer(
-                    image: 'asset/container_kids.jpeg',
-                    text: 'Episods',
-                  );
-                },
-                childCount: 10,
-              ),
+            Consumer<NetfilixProvider>(
+              builder: (context, value, child) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final data = value.listOfDataOfNetFlix[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Stack(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: SizedBox(
+                                    height: 200,
+                                    width: double.infinity,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl:
+                                              '${value.imagePath}${data.backdrop_path}'),
+                                    ),
+                                  ),
+                                ),
+                                const Gap(10),
+                                textSample(
+                                  textdetails: data.title ?? 'No title',
+                                  size: 20,
+                                  fontw: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                            const Positioned.fill(
+                              child: Center(
+                                child: Icon(
+                                  CupertinoIcons.play_circle,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: value.listOfDataOfNetFlix.length,
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
   }
-}
 
-Widget bigContainer({required String image, required String text}) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 20, right: 20),
-    child: Stack(
+  // Define newoneRowContainer if it is missing
+  Widget newoneRowContainer() {
+    return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 200,
-              width: double.infinity,
-              child: Image.asset(
-                image,
-                fit: BoxFit.fill,
-              ),
-            ),
-            Gap(10),
-            textSample(
-              textdetails: text,
-              size: 20,
-              fontw: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ],
-        ),
-        Positioned.fill(
-          child: Center(
-            child: Icon(
-              CupertinoIcons.play_circle,
-              color: Colors.white,
-              size: 50,
-            ),
-          ),
-        ),
+        // Add custom widgets here
       ],
-    ),
-  );
+    );
+  }
 }

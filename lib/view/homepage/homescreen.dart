@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:netflix/model/model.dart';
 import 'package:netflix/utils/utils.dart';
+import 'package:netflix/view/homepage/homepageWidget.dart';
+import 'package:netflix/view/tvShowPage/tvscreen.dart';
 import 'package:netflix/view/widgets/widgets.dart';
 import 'package:netflix/viewModel/netfilixprovider.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<NetfilixProvider>(context, listen: false).getAllMovieData();
+    // Use addPostFrameCallback to delay the calls
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Now you can safely call the provider methods
+      Provider.of<NetfilixProvider>(context, listen: false).getAllMovieData();
+      Provider.of<NetfilixProvider>(context, listen: false).tvUrl();
+      Provider.of<NetfilixProvider>(context, listen: false).topratedFucntion();
+      Provider.of<NetfilixProvider>(context, listen: false).upMovies();
+    });
   }
 
   @override
@@ -51,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                               child: Image(
                             image: NetworkImage(
                               '${providerItemsFetch.imagePath}'
-                              '${providerItemsFetch.listOfDataOfNetFlix[1].poster_path},',
+                              '${providerItemsFetch.listOfDataOfNetFlix[10].poster_path},',
                             ),
                             fit: BoxFit.fitWidth,
                           )),
@@ -76,6 +85,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Gap(10),
                               // Top Bar
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -130,11 +140,19 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text(
-                                      'TV Shows',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (ctx) => Tvshow()));
+                                      },
+                                      child: Text(
+                                        'TV Shows',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                     Text(
                                       'Movies',
@@ -245,54 +263,31 @@ class _HomePageState extends State<HomePage> {
                             fontw: FontWeight.bold,
                             color: Utils.textColors),
                         Gap(20),
-                        Container(
-                          height: 200,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 20,
-                            itemBuilder: (context, index) {
-                              var data = providerItemsFetch
-                                  .listOfDataOfNetFlix[index].backdrop_path;
-                              return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Container(
-                                    height: 170,
-                                    width: 140.79,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            '$imageBaseurl${providerItemsFetch.listOfDataOfNetFlix[index].poster_path}', // Use the data URL here
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ));
-                            },
-                          ),
-                        ),
+                        fetchingContainerFromCat(
+                            listNameOfCatogery:
+                                providerItemsFetch.listOfDataOfNetFlix),
                         Gap(20),
                         textSample(
-                            textdetails: 'Releases in The Last Past Years',
+                            textdetails: 'Top Rated',
                             size: 20,
                             fontw: FontWeight.bold,
                             color: Utils.textColors),
                         Gap(20),
-                        Container(
-                          height: 200,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 20,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: contPast(
-                                    'your_image_path_here.jpg'), // Provide valid path
-                              );
-                            },
-                          ),
-                        ),
+                        fetchingContainerFromCat(
+                            listNameOfCatogery: providerItemsFetch.toprated),
+                        Gap(20),
+                        textSample(
+                            textdetails: 'Upcoming movies',
+                            size: 20,
+                            fontw: FontWeight.bold,
+                            color: Utils.textColors),
+                        Gap(20),
+                        fetchingContainerFromCat(
+                            listNameOfCatogery:
+                                providerItemsFetch.upcomingMovies),
+                        Gap(20),
+                        fetchingContainerFromCat(
+                            listNameOfCatogery: providerItemsFetch.tvList),
                       ],
                     ),
                   ),
@@ -304,27 +299,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-Widget contPast(String imagePath) {
-  return Container(
-    height: 170.0,
-    width: 120.79,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey,
-            child: Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-          );
-        },
-      ),
-    ),
-  );
 }

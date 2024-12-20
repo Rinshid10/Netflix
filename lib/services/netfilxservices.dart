@@ -1,15 +1,15 @@
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:netflix/constants/UrlConstants/urlconstants.dart';
 import 'package:netflix/model/model.dart';
 
 class NetfilxServices {
+  final baseURl = Urlconstants.baseUrl.toString();
+
   Dio dio = Dio();
 
   Future<List<NetflixModel>> getAllModels() async {
-    final baseURl =
-        'https://api.themoviedb.org/3/trending/movie/day?api_key=d26a8dd97ecb04414d11287cd30cca91';
     try {
       final response = await dio.get(baseURl);
       if (response.statusCode == 200) {
@@ -24,13 +24,15 @@ class NetfilxServices {
     }
   }
 
-  Future<List<NetflixModel>> popUlarmovie() async {
-    final baseURl =
-        'https://api.themoviedb.org/3/movie/popular?api_key=d26a8dd97ecb04414d11287cd30cca91';
+  Future<List<NetflixModel>> topRated() async {
+    final topUrl = Urlconstants.topRated.toString();
+
+    Dio dio = Dio();
+
     try {
-      final response = await dio.get(baseURl);
+      final response = await dio.get(topUrl);
       if (response.statusCode == 200) {
-        log('fecthing succuess');
+        log('fecthing succuess toprated');
         List data = response.data['results'];
         return data.map((e) => NetflixModel.fromJson(e)).toList();
       } else {
@@ -41,14 +43,15 @@ class NetfilxServices {
     }
   }
 
-  Future<List<NetflixModel>> toprated({required String movies}) async {
-    final baseURll =
-        'https://api.themoviedb.org/3/movie/top_rated?api_key=d26a8dd97ecb04414d11287cd30cca91';
+  Future<List<NetflixModel>> upcomingtMoves() async {
+    final latesUrl = Urlconstants.upcoming.toString();
+        
+    Dio dio = Dio();
 
     try {
-      final response = await dio.get(baseURll);
+      final response = await dio.get(latesUrl);
       if (response.statusCode == 200) {
-        log('fecthing succuess');
+        log('fecthing succuess toprated');
         List data = response.data['results'];
         return data.map((e) => NetflixModel.fromJson(e)).toList();
       } else {
@@ -59,14 +62,15 @@ class NetfilxServices {
     }
   }
 
-  Future<List<NetflixModel>> displyDetails({required int id}) async {
-    final baseURll =
-        'https://api.themoviedb.org/3/tv/$id?api_key=d26a8dd97ecb04414d11287cd30cca91';
+  Future<List<NetflixModel>> tvShows() async {
+    final tvUrl =
+       Urlconstants.tvshows.toString();
+    Dio dio = Dio();
 
     try {
-      final response = await dio.get(baseURll);
+      final response = await dio.get(tvUrl);
       if (response.statusCode == 200) {
-        log('fecthing succuess');
+        log('fecthing succuess toprated');
         List data = response.data['results'];
         return data.map((e) => NetflixModel.fromJson(e)).toList();
       } else {
@@ -77,14 +81,15 @@ class NetfilxServices {
     }
   }
 
-  Future<List<NetflixModel>> search({required int movie}) async {
-    final baseURll =
-        'https://api.themoviedb.org/3/search/multi?api_key=d26a8dd97ecb04414d11287cd30cca91&query=$movie';
+  Future<List<NetflixModel>> searchFc({required String movie}) async {
+    final searchUrl =
+        '${ Urlconstants.search.toString()}$movie';
+    Dio dio = Dio();
 
     try {
-      final response = await dio.get(baseURll);
+      final response = await dio.get(searchUrl);
       if (response.statusCode == 200) {
-        log('fecthing succuess');
+        log('fecthing succuess toprated');
         List data = response.data['results'];
         return data.map((e) => NetflixModel.fromJson(e)).toList();
       } else {
@@ -95,9 +100,5 @@ class NetfilxServices {
     }
   }
 
-  dispay() {
-    getAllModels().then((value) {
-      print(value.first.title);
-    });
-  }
+
 }
