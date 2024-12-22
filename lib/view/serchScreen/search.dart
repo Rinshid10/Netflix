@@ -19,7 +19,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<NetfilixProvider>(context, listen: false).searchFcpr();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<NetfilixProvider>(context, listen: false).searchFcpr();
+    });
   }
 
   @override
@@ -27,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Utils.main,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Utils.main,
         title: Consumer<NetfilixProvider>(
           builder: (context, newone, child) {
@@ -34,17 +37,19 @@ class _SearchPageState extends State<SearchPage> {
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: TextField(
                 decoration: InputDecoration(
-                    hintText: 'Search',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-                    contentPadding: EdgeInsets.all(5),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.5),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                  contentPadding: EdgeInsets.all(5),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onSubmitted: (value) {
-                  newone.searchFcpr();
+                  newone.searchFcpr(); // Corrected method name
                 },
-                controller: newone.serchController,
+                controller: newone.serchController, // Corrected controller name
               ),
             );
           },
@@ -57,6 +62,47 @@ class _SearchPageState extends State<SearchPage> {
               child: CircularProgressIndicator(),
             );
           }
+          if (newone.serarchlist.isEmpty) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: textSample(
+                    textdetails: "Most Searches",
+                    size: 20,
+                    fontw: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: newone.listOfDataOfNetFlix.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, childAspectRatio: 0.7),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  '${newone.imagePath}${newone.listOfDataOfNetFlix[index].poster_path}',
+                              errorWidget: (context, url, error) =>
+                                  Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+
           return SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
@@ -65,81 +111,59 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   Gap(20),
                   textSample(
-                      textdetails: "Top Searches",
-                      size: 20,
-                      fontw: FontWeight.bold,
-                      color: Colors.white),
+                    textdetails: "Top Searches",
+                    size: 20,
+                    fontw: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: newone.serarchlist.length,
                       itemBuilder: (context, index) {
                         var data = newone.serarchlist[index];
-                        if (newone.serarchlist.isEmpty) {
-                          return Center(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                  size: 60,
-                                ),
-                                textSample(
-                                    textdetails: 'Search your movies',
-                                    size: 20,
-                                    fontw: FontWeight.bold,
-                                    color: Colors.white)
-                              ],
-                            ),
-                          );
-                        }
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 80,
-                                  width: 120,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      imageUrl:
-                                          '${newone.imagePath}${data.backdrop_path}',
-                                      errorWidget: (context, url, error) =>
-                                          Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                    ),
+                          padding: const EdgeInsets.only(
+                              bottom: 10.0, top: 15), // Combined padding
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 80,
+                                width: 120,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl:
+                                        '${newone.imagePath}${data.backdrop_path}',
+                                    errorWidget: (context, url, error) =>
+                                        Center(
+                                            child: CircularProgressIndicator()),
                                   ),
                                 ),
-                                Gap(20),
-                                Expanded(
-                                  child: textSamples(
-                                    textdetails: data.title ?? 'no title',
-                                    size: 18,
-                                    fontw: FontWeight.normal,
-                                    color: Colors.white,
-                                    maxLines: 1, // Limit to one line
-                                    overflow:
-                                        TextOverflow.ellipsis, // Use ellipsis
-                                  ),
+                              ),
+                              Gap(20),
+                              Expanded(
+                                child: textSample(
+                                  // Corrected method name
+                                  textdetails: data.title ?? 'no title',
+                                  size: 18,
+                                  fontw: FontWeight.normal,
+                                  color: Colors.white,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    CupertinoIcons.play_arrow_solid,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  CupertinoIcons.play_arrow_solid,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

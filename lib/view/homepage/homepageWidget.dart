@@ -46,6 +46,7 @@ Widget fetchingContainerFromCat({required List<dynamic> listNameOfCatogery}) {
                       context,
                       MaterialPageRoute(
                           builder: (ctx) => ViewPage(
+                              index: index,
                               movieOrseries: data.media_type,
                               about: data.overview,
                               images: data.backdrop_path,

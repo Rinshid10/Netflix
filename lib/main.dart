@@ -11,6 +11,7 @@ import 'package:netflix/view/viewScreen/viewpage.dart';
 import 'package:netflix/view/whoPage/watching.dart';
 import 'package:netflix/view/whoPage/whopageWidget.dart';
 import 'package:netflix/viewModel/botombarProvider.dart';
+import 'package:netflix/viewModel/downloads.dart';
 import 'package:netflix/viewModel/netfilixprovider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => DownloadsProvider(),
+        ),
         ChangeNotifierProvider(
           create: (context) => NetfilixProvider(),
         ),

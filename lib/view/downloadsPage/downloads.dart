@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:netflix/utils/utils.dart';
 import 'package:netflix/view/widgets/widgets.dart';
+import 'package:netflix/viewModel/netfilixprovider.dart';
+import 'package:provider/provider.dart';
 
 class DownloadPage extends StatelessWidget {
   const DownloadPage({super.key});
@@ -18,9 +20,9 @@ class DownloadPage extends StatelessWidget {
             size: 25,
             fontw: FontWeight.bold,
             color: Colors.white),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 15),
+            padding: EdgeInsets.only(right: 15),
             child: Row(
               children: [
                 Icon(
@@ -49,17 +51,17 @@ class DownloadPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.info,
                       color: Colors.white,
                     ),
-                    Gap(10),
+                    const Gap(10),
                     textSample(
                         textdetails: 'Smart Downloads',
                         size: 15,
                         fontw: FontWeight.bold,
                         color: Colors.white),
-                    Gap(10),
+                    const Gap(10),
                     textSample(
                         textdetails: 'ON',
                         size: 15,
@@ -70,7 +72,7 @@ class DownloadPage extends StatelessWidget {
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Search',
                   prefixIcon: Icon(
@@ -78,11 +80,11 @@ class DownloadPage extends StatelessWidget {
                     size: 20,
                   )),
             ),
-            Gap(10),
+            const Gap(10),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 10,
                 itemBuilder: (context, index) {
@@ -91,7 +93,7 @@ class DownloadPage extends StatelessWidget {
                     child: Card(
                         elevation: 3,
                         color: Utils.main,
-                        child: continerInDownload()),
+                        child: continerInDownload(context, index)),
                   );
                 },
               ),
@@ -103,50 +105,85 @@ class DownloadPage extends StatelessWidget {
   }
 }
 
-Widget continerInDownload() {
-  return Container(
-    height: 100,
-    width: double.infinity,
-    child: Row(
-      children: [
-        Container(
-          height: double.infinity,
-          width: 150,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: Image(
-              image: AssetImage('asset/spider.webp'),
-              fit: BoxFit.fill,
+Widget continerInDownload(BuildContext context, int index) {
+  return Consumer<NetfilixProvider>(
+    builder: (context, value, child) {
+      if (index >= value.toprated.length) {
+        return const SizedBox(
+          height: 100,
+          child: Center(
+            child: Text(
+              'No data available',
+              style: TextStyle(color: Colors.white),
             ),
           ),
-        ),
-        Gap(10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        );
+      }
+
+      final data = value.toprated[index];
+      final imageUrl = data.backdrop_path != null
+          ? 'https://image.tmdb.org/t/p/w500${data.backdrop_path}'
+          : '';
+
+      return SizedBox(
+        height: 100,
+        width: double.infinity,
+        child: Row(
           children: [
-            textSample(
-                textdetails: 'Spider man2',
-                size: 15,
-                fontw: FontWeight.normal,
-                color: Colors.white),
-            textSample(
-                textdetails: 'Downloading...',
-                size: 15,
-                fontw: FontWeight.bold,
-                color: Colors.white60),
+            SizedBox(
+              height: double.infinity,
+              width: 150,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(3),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error, color: Colors.red),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            const Gap(10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.title ?? 'No title',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Text(
+                    'Downloading...',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white60,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.white60,
+                size: 40,
+              ),
+            )
           ],
         ),
-        Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.keyboard_arrow_right,
-            color: Colors.white60,
-            size: 40,
-          ),
-        )
-      ],
-    ),
+      );
+    },
   );
 }

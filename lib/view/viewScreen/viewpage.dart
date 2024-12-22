@@ -1,4 +1,3 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +5,18 @@ import 'package:gap/gap.dart';
 import 'package:netflix/utils/utils.dart';
 import 'package:netflix/view/viewScreen/widgets.dart';
 import 'package:netflix/view/widgets/widgets.dart';
+import 'package:netflix/viewModel/downloads.dart';
 import 'package:netflix/viewModel/netfilixprovider.dart';
 import 'package:provider/provider.dart';
 
 class ViewPage extends StatelessWidget {
-  String? titleName;
-  String? originalLan;
-  String? images;
-  String? about;
-  String? releaseDate;
-  String? movieOrseries;
+  final String? titleName;
+  final String? originalLan;
+  final String? images;
+  final String? about;
+  final String? releaseDate;
+  final String? movieOrseries;
+  final int index;
 
   ViewPage({
     super.key,
@@ -25,6 +26,7 @@ class ViewPage extends StatelessWidget {
     required this.originalLan,
     required this.releaseDate,
     required this.titleName,
+    required this.index,
   });
 
   @override
@@ -135,29 +137,41 @@ class ViewPage extends StatelessWidget {
                           ),
                         ),
                         const Gap(10),
-                        Container(
-                          width: double.infinity,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.download,
-                                color: Colors.white,
+                        Consumer2<DownloadsProvider, NetfilixProvider>(
+                          builder: (context, downloadsProvider,
+                              netfilixProvider, child) {
+                            final data =
+                                netfilixProvider.listOfDataOfNetFlix[index];
+                            return GestureDetector(
+                              onTap: () {
+                                downloadsProvider.addDownloads([data]);
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.download,
+                                      color: Colors.white,
+                                    ),
+                                    const Gap(4),
+                                    textSample(
+                                      textdetails: 'Download',
+                                      size: 18,
+                                      fontw: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const Gap(4),
-                              textSample(
-                                textdetails: 'Download',
-                                size: 18,
-                                fontw: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                         const Gap(10),
                         Text(

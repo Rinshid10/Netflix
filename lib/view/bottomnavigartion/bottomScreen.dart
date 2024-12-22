@@ -4,13 +4,17 @@ import 'package:netflix/view/downloadsPage/downloads.dart';
 import 'package:netflix/view/homepage/homescreen.dart';
 import 'package:netflix/view/serchScreen/search.dart';
 import 'package:netflix/view/splahScreen/splashscreen.dart';
-import 'package:netflix/view/viewScreen/viewpage.dart';
 import 'package:netflix/viewModel/botombarProvider.dart';
 import 'package:provider/provider.dart';
 
 class BottomScreen extends StatelessWidget {
   BottomScreen({super.key});
-  final pages = [HomePage(), SearchPage(), SplashScreen(), DownloadPage()];
+  final pages = [
+    HomePage(),
+    const SearchPage(),
+    const SplashScreen(),
+    const DownloadPage()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class BottomScreen extends StatelessWidget {
             value.onchanged(index);
           },
           currentIndex: value.curruntIndex,
-          items: [
+          items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
             BottomNavigationBarItem(
