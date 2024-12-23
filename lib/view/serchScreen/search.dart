@@ -20,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<NetfilixProvider>(context, listen: false).searchFcpr();
+      Provider.of<NetfilixProvider>(context, listen: false).searchFcpr(context);
     });
   }
 
@@ -47,7 +47,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 onSubmitted: (value) {
-                  newone.searchFcpr(); // Corrected method name
+                  newone.searchFcpr(context); // Corrected method name
                 },
                 controller: newone.serchController, // Corrected controller name
               ),

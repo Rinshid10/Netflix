@@ -12,7 +12,7 @@ class Tvshow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NetfilixProvider>(context, listen: false).tvUrl();
+    Provider.of<NetfilixProvider>(context, listen: false).tvUrl(context);
     // final listTv = Provider.of<NetfilixProvider>(context, listen: false).tvList;
     return SafeArea(
       child: Consumer<NetfilixProvider>(

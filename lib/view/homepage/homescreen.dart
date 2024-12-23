@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:netflix/model/model.dart';
 import 'package:netflix/utils/utils.dart';
 import 'package:netflix/view/homepage/homepageWidget.dart';
 import 'package:netflix/view/tvShowPage/tvscreen.dart';
@@ -11,6 +9,8 @@ import 'package:netflix/viewModel/netfilixprovider.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
     // Use addPostFrameCallback to delay the calls
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Now you can safely call the provider methods
-      Provider.of<NetfilixProvider>(context, listen: false).getAllMovieData();
-      Provider.of<NetfilixProvider>(context, listen: false).tvUrl();
-      Provider.of<NetfilixProvider>(context, listen: false).topratedFucntion();
-      Provider.of<NetfilixProvider>(context, listen: false).upMovies();
+      Provider.of<NetfilixProvider>(context, listen: false).getAllMovieData(context);
+      Provider.of<NetfilixProvider>(context, listen: false).tvUrl(context);
+      Provider.of<NetfilixProvider>(context, listen: false).topratedFucntion(context);
+      Provider.of<NetfilixProvider>(context, listen: false).upMovies(context);
     });
   }
 
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
 
           // Ensure listOfData is not empty and contains valid data
           if (listOfData.isEmpty) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           return SingleChildScrollView(
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Gap(10),
+                              const Gap(10),
                               // Top Bar
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -93,14 +93,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       height: 40,
                                       width: 40,
                                       child: Image.asset('asset/netfixicon.png',
                                           fit: BoxFit.contain),
                                     ),
                                     Expanded(
-                                      child: Container(
+                                      child: SizedBox(
                                         width: 200,
                                         child: TextFormField(
                                           decoration: InputDecoration(
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                             filled: true,
                                             fillColor:
                                                 Colors.white.withOpacity(0.3),
-                                            contentPadding: EdgeInsets.all(10),
+                                            contentPadding: const EdgeInsets.all(10),
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -125,8 +125,8 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-                                    Gap(10),
-                                    Image(
+                                    const Gap(10),
+                                    const Image(
                                         image:
                                             AssetImage('asset/serchicons.jpg')),
                                   ],
@@ -145,22 +145,22 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (ctx) => Tvshow()));
+                                                builder: (ctx) => const Tvshow()));
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'TV Shows',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    Text(
+                                    const Text(
                                       'Movies',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
+                                    const Text(
                                       'Categories',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -169,22 +169,22 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SizedBox(height: 8),
-                                    Text(
+                                    const SizedBox(height: 8),
+                                    const Text(
                                       'TV Show • Supernatural • Thriller • US',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                       ),
                                     ),
-                                    SizedBox(height: 16),
+                                    const SizedBox(height: 16),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 10),
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Column(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 CupertinoIcons.checkmark_alt,
                                                 color: Colors.white,
                                               ),
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                                   color: Colors.white),
                                             ],
                                           ),
-                                          Gap(40),
+                                          const Gap(40),
                                           Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
@@ -217,9 +217,9 @@ class _HomePageState extends State<HomePage> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Icon(Icons.play_arrow,
+                                                const Icon(Icons.play_arrow,
                                                     color: Colors.black),
-                                                Gap(5),
+                                                const Gap(5),
                                                 textSample(
                                                     textdetails: 'Play',
                                                     size: 20,
@@ -228,10 +228,10 @@ class _HomePageState extends State<HomePage> {
                                               ],
                                             ),
                                           ),
-                                          Gap(40),
+                                          const Gap(40),
                                           Column(
                                             children: [
-                                              Icon(Icons.info_outline,
+                                              const Icon(Icons.info_outline,
                                                   color: Colors.white),
                                               textSample(
                                                   textdetails: 'Info',
@@ -262,30 +262,30 @@ class _HomePageState extends State<HomePage> {
                             size: 20,
                             fontw: FontWeight.bold,
                             color: Utils.textColors),
-                        Gap(20),
+                        const Gap(20),
                         fetchingContainerFromCat(
                             listNameOfCatogery:
                                 providerItemsFetch.listOfDataOfNetFlix),
-                        Gap(20),
+                        const Gap(20),
                         textSample(
                             textdetails: 'Top Rated',
                             size: 20,
                             fontw: FontWeight.bold,
                             color: Utils.textColors),
-                        Gap(20),
+                        const Gap(20),
                         fetchingContainerFromCat(
                             listNameOfCatogery: providerItemsFetch.toprated),
-                        Gap(20),
+                        const Gap(20),
                         textSample(
                             textdetails: 'Upcoming movies',
                             size: 20,
                             fontw: FontWeight.bold,
                             color: Utils.textColors),
-                        Gap(20),
+                        const Gap(20),
                         fetchingContainerFromCat(
                             listNameOfCatogery:
                                 providerItemsFetch.upcomingMovies),
-                        Gap(20),
+                        const Gap(20),
                         fetchingContainerFromCat(
                             listNameOfCatogery: providerItemsFetch.tvList),
                       ],

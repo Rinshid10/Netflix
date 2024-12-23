@@ -7,7 +7,9 @@ import 'package:netflix/model/model.dart';
 class NetfilxServices {
   final baseURl = Urlconstants.baseUrl.toString();
 
-  Dio dio = Dio();
+  Dio dio = Dio(BaseOptions(
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5)));
 
   Future<List<NetflixModel>> getAllModels() async {
     try {
@@ -19,15 +21,18 @@ class NetfilxServices {
       } else {
         throw Exception('erro found in feacthing');
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception('connection error check your internet conection');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('server error ');
+      }
     }
+    throw Exception('failed');
   }
 
   Future<List<NetflixModel>> topRated() async {
     final topUrl = Urlconstants.topRated.toString();
-
-    Dio dio = Dio();
 
     try {
       final response = await dio.get(topUrl);
@@ -38,14 +43,19 @@ class NetfilxServices {
       } else {
         throw Exception('erro found in feacthing');
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception('connection error check your internet conection');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('server error ');
+      }
     }
+    return [];
   }
 
   Future<List<NetflixModel>> upcomingtMoves() async {
     final latesUrl = Urlconstants.upcoming.toString();
-        
+
     Dio dio = Dio();
 
     try {
@@ -57,16 +67,18 @@ class NetfilxServices {
       } else {
         throw Exception('erro found in feacthing');
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception('connection error check your internet conection');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('server error ');
+      }
     }
+    throw Exception('empty data');
   }
 
   Future<List<NetflixModel>> tvShows() async {
-    final tvUrl =
-       Urlconstants.tvshows.toString();
-    Dio dio = Dio();
-
+    final tvUrl = Urlconstants.tvshows.toString();
     try {
       final response = await dio.get(tvUrl);
       if (response.statusCode == 200) {
@@ -76,16 +88,18 @@ class NetfilxServices {
       } else {
         throw Exception('erro found in feacthing');
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception('connection error check your internet conection');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('server error ');
+      }
     }
+    throw Exception('empty data');
   }
 
   Future<List<NetflixModel>> searchFc({required String movie}) async {
-    final searchUrl =
-        '${ Urlconstants.search.toString()}$movie';
-    Dio dio = Dio();
-
+    final searchUrl = '${Urlconstants.search.toString()}$movie';
     try {
       final response = await dio.get(searchUrl);
       if (response.statusCode == 200) {
@@ -95,10 +109,13 @@ class NetfilxServices {
       } else {
         throw Exception('erro found in feacthing');
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception('connection error check your internet conection');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('server error ');
+      }
     }
+    throw Exception('empty data');
   }
-
-
 }

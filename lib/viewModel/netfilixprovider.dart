@@ -13,65 +13,65 @@ class NetfilixProvider extends ChangeNotifier {
   List<NetflixModel> serarchlist = [];
   TextEditingController serchController = TextEditingController();
   bool flag = false;
-  Future<void> getAllMovieData() async {
+  Future<void> getAllMovieData(BuildContext context) async {
     flag = true;
     notifyListeners();
     try {
       listOfDataOfNetFlix = await netFlixSer.getAllModels();
     } catch (e) {
-      log('error found');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     } finally {
       flag = false;
       notifyListeners();
     }
   }
 
-  Future<void> topratedFucntion() async {
+  Future<void> topratedFucntion(BuildContext context) async {
     flag = true;
     notifyListeners();
     try {
       toprated = await netFlixSer.topRated();
     } catch (e) {
-      log('error found in toprated movies api');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     } finally {
       flag = false;
       notifyListeners();
     }
   }
 
-  Future<void> upMovies() async {
+  Future<void> upMovies(BuildContext context) async {
     flag = true;
     notifyListeners();
     try {
       upcomingMovies = await netFlixSer.upcomingtMoves();
     } catch (e) {
-      log('error found in latest movies api');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     } finally {
       flag = false;
       notifyListeners();
     }
   }
 
-  Future<void> tvUrl() async {
+  Future<void> tvUrl(BuildContext context) async {
     flag = true;
     notifyListeners();
     try {
       tvList = await netFlixSer.tvShows();
     } catch (e) {
-      log('error found in tvurl movies api');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     } finally {
       flag = false;
       notifyListeners();
     }
   }
 
-  Future<void> searchFcpr() async {
+  Future<void> searchFcpr(BuildContext context) async {
     flag = true;
     notifyListeners();
     try {
       serarchlist = await netFlixSer.searchFc(movie: serchController.text);
     } catch (e) {
-      log('error found in tvurl movies api');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     } finally {
       flag = false;
       notifyListeners();
